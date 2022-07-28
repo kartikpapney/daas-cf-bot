@@ -21,11 +21,11 @@ client.once('ready', () => {
 	console.log('Ready!');
 });
 
-client.on('messageCreate', msg => {
+client.on('messageCreate', async(msg) => {
     if(msg.author.bot) return;
     if(msg.content.startsWith(PREFIX)) {
         const CMD = msg.content.trim().substring(PREFIX.length).split(" ");
-        msg.reply(getResult(CMD));
+        msg.reply(await getResult(CMD));
     }
 });
 
