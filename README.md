@@ -9,13 +9,13 @@
     6. App Engine
 
 ## Feature
-    1. Announcement (For Recent Contest) (+command)
-    2. Command -> Codeforces Handle 
-        a. Role
-        b. if not automatic (update command)
-    3. Greetings
-        a. After contest cheer the top performers.
-    4. Random problems.
-        a. 1400 -> 1500, 1600 problem
-    5. User's Progress 
+1. Announcement [API](https://codeforces.com/api/contest.list)
+2. Command -> Codeforces Handle [API]( https://codeforces.com/api/user.info?handles=DmitriyH;Fefer_Ivan)
+    a. Role
+    b. If not automatic (update command)
+3. Greetings [API](https://codeforces.com/api/contest.standings?contestId=566)
     
+    a. After contest cheer the top performers.
+4. Random problems.
+    a. 1400 -> 1500, 1600 problem
+5. User's Progress

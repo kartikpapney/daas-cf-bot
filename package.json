@@ -1,0 +1,25 @@
+{
+  "name": "daas-cf-bot",
+  "version": "1.0.0",
+  "description": "\"DAAS Codeforces BOT\"",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kartikpapney/daas-cf-bot.git"
+  },
+  "author": "DAAS",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kartikpapney/daas-cf-bot/issues"
+  },
+  "homepage": "https://github.com/kartikpapney/daas-cf-bot#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "discord.js": "^14.0.3",
+    "dotenv": "^16.0.1",
+    "nodemon": "^2.0.19"
+  }
+}
