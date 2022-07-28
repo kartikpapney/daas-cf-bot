@@ -15,7 +15,7 @@
     b. If not automatic (update command)
 3. Greetings [API](https://codeforces.com/api/contest.standings?contestId=566)
     
-    a. After contest cheer the top performers.
+    a. After contest cheer the top performers.git
 4. Random problems.
     a. 1400 -> 1500, 1600 problem
 5. User's Progress
