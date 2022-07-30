@@ -5,7 +5,6 @@ const cache = new NodeCache();
 
 
 const getRandomProblem = async(rate) => {
-    var check = true;
     if(!cache.get("problems")) {
         const resp = await axios.get(`https://codeforces.com/api/problemset.problems`);
         const problems = await resp.data.result.problems;

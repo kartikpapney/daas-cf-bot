@@ -1,6 +1,6 @@
 require('dotenv').config();
-
-const { Client, GatewayIntentBits, Partials } = require('discord.js');
+const DatastoreClient = require('./Database/database.js');
+const { Client, GatewayIntentBits, Partials, MessageFlags } = require('discord.js');
 const {getResult} = require("./Commands/commands");
 const client = new Client(
     {
@@ -15,7 +15,8 @@ const client = new Client(
     }
 );
 
-const PREFIX = '$';
+const PREFIX=process.env.PREFIX;
+
 
 client.once('ready', () => {
 	console.log('Ready!');
@@ -24,10 +25,15 @@ client.once('ready', () => {
 client.on('messageCreate', async(msg) => {
     if(msg.author.bot) return;
     if(msg.content.startsWith(PREFIX)) {
-        const CMD = msg.content.trim().substring(PREFIX.length).split(" ");
-        msg.reply(await getResult(CMD));
+        await getResult(msg);
     }
 });
 
-client.login(process.env.DISCORD_JS_BOT_TOKEN);
+// const findd = async() => {
+//     await DatastoreClient.save("Task", "pk1", {fname: "task1", description: "task1 description"});
+//     const res = await DatastoreClient.get("Task", "pk1");
+//     return res;
+// }
+// findd().then((res) => console.log(res));
+// client.login(process.env.DISCORD_JS_BOT_TOKEN);
 
