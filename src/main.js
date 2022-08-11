@@ -1,6 +1,5 @@
 require('dotenv').config();
-
-const { Client, GatewayIntentBits, Partials } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, MessageFlags } = require('discord.js');
 const {getResult} = require("./Commands/commands");
 const client = new Client(
     {
@@ -15,17 +14,16 @@ const client = new Client(
     }
 );
 
-const PREFIX = '$';
+const PREFIX=process.env.PREFIX;
+
 
 client.once('ready', () => {
 	console.log('Ready!');
 });
 
-client.on('messageCreate', msg => {
-    if(msg.author.bot) return;
-    if(msg.content.startsWith(PREFIX)) {
-        const CMD = msg.content.trim().substring(PREFIX.length).split(" ");
-        msg.reply(getResult(CMD));
+client.on('messageCreate', async(msg) => {
+    if(!msg.author.bot && msg.content.startsWith(PREFIX)) {
+        await getResult(msg);
     }
 });
 
