@@ -1,20 +1,7 @@
 const axios = require('axios');
 const {EmbedBuilder} = require('discord.js');
 
-
-const color = {
-    undefined: '#000000',
-    "newbie": "#d3d3d3",
-    "pupil": "#00FF00",
-    "specialist": "#03a89e",
-    "expert": "#0000ff",
-    "candidate master": "#aa00aa",
-    "master": "#ff8c00",
-    "international master": "#ff8c00",
-    "grandmaster": "#ff0000",
-    "international grandmaster": "#ff0000",
-    "legendary grandmaster": "#ff0000"
-}
+const {color} = require('../static/roles.js');
 
 const getUserHandle = async(handle) => {
     return new Promise(async(resolve, reject) => {
@@ -35,6 +22,8 @@ const getUserHandle = async(handle) => {
                         .setTitle("```" + `${handle}\n${user.rank||"NA"} ${"\xa0".repeat(rankspace)} ${user.rating||"NA"}` + "```")
                         .setDescription("```" + res + "```")
                         .setColor(color[user.rank])
+                        .setThumbnail('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Codeforces_logo.svg/2560px-Codeforces_logo.svg.png')
+                        .setFooter({ text: 'DaaS Codeforces Bot' });
             resolve({ embeds: [embed] })
         } catch(e) {
             resolve("```" + "No User Found" + "```");

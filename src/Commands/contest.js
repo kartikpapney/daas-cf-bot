@@ -1,6 +1,7 @@
 const axios = require('axios');
-const {EmbedBuilder} = require('discord.js');
+const {EmbedBuilder, Message, MessageE} = require('discord.js');
 const NodeCache = require( "node-cache" );
+const {getCodeforcesHandle, getAuthorizedUsers} = require("./authorization.js")
 const cache = new NodeCache();
 
 const getUpcomingContests = async() => {
@@ -37,4 +38,49 @@ const getUpcomingContests = async() => {
     })
 }
 
-module.exports = {getUpcomingContests};
+
+const getContestStanding = async(contest) => {
+    var response = ""
+    const embed = new EmbedBuilder()
+                .setTitle(`Contest ${contest} @Codeforces`)
+                .setImage('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Codeforces_logo.svg/2560px-Codeforces_logo.svg.png')
+                .setDescription(`DaaS congratulate below users to be in top 5000 in contest ${contest}`)
+                .setThumbnail('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Codeforces_logo.svg/2560px-Codeforces_logo.svg.png')
+                .setFooter({ text: 'DaaS Codeforces Bot' });
+    if(!cache.get(`contest${contest}`)) {
+        try {
+            const resp = await axios.get(`https://codeforces.com/api/contest.ratingChanges?contestId=${contest}&from=1&count=5000`);
+            const result = await resp.data.result;
+            if(!result) response = "```" + "No Data Found" + "```";
+            else {
+                const users = await getAuthorizedUsers();
+                const standing = result
+                        .filter((u) => users.includes(u.handle))
+                        .map((u) => {
+                            return {"handle": u.handle, "rank": u.rank}
+                        });
+                if(cache.set(`contest${contest}`, standing, process.env.CACHE_TIME)) {
+                    console.log("cached");
+                } else {
+                    console.log("can't cache");
+                    return new Promise((resolve, reject) => {
+                        resolve("error");
+                    })
+                }
+            }
+        } catch(e) {
+            return new Promise((resolve, reject) => {
+                resolve("Invalid Contest");
+            })
+        }
+    }
+    const standing = cache.get(`contest${contest}`)
+    standing.forEach((user) => embed.addFields(
+        {"name": user.handle, "value": user.rank+""})
+    )
+    response = { embeds: [embed] } 
+    return new Promise((resolve, reject) => {
+        resolve(response)
+    })
+}
+module.exports = {getUpcomingContests, getContestStanding};

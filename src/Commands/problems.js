@@ -33,7 +33,9 @@ const getRandomProblem = async(rate) => {
     const problem = problemwithrate[Math.floor(Math.random() * problemwithrate.length)];
     const embed = new EmbedBuilder()
                 .setImage('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Codeforces_logo.svg/2560px-Codeforces_logo.svg.png')
-                .setDescription(problem);
+                .setDescription(problem)
+                .setThumbnail('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Codeforces_logo.svg/2560px-Codeforces_logo.svg.png')
+                .setFooter({ text: 'DaaS Codeforces Bot' });
     return new Promise((resolve, reject) => {
         resolve({ embeds: [embed] })
     })

@@ -24,6 +24,14 @@ class DatastoreClient {
         };
         await this.datastore.save(task);
     }
+    async getAll(kind) {
+
+        const query = this.datastore
+                        .createQuery('User');
+        const resp = await this.datastore.runQuery(query);
+        const user = resp[0].map((u) => u.handle);
+        return user;
+    }
     async get(kind, name) {
         /* 
         get data obj from datastore with custom key.

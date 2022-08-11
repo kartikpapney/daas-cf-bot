@@ -1,58 +1,25 @@
-// const axios = require('axios');
-// const {Message} = require('discord.js');
+const axios = require('axios');
+const {Message, resolveColor} = require('discord.js');
 
-// const assign = (message, arguments) => {
-//     /**
-//      * @param {Message} message
-//      */
-//     const targetUser = message.author.username;
-//     console.log(targetUser);
-//     if (!targetUser) {
-//         message.reply('Please specify someone to give a role to.')
-//         return
-//     }
+const {roles} = require('../static/roles.js');
 
-//     arguments.shift()
+/**
+     * @param {Message} msg
+     * @param {String} rank
+ */
 
-//     const roleName = arguments.join(' ')
-//     const { guild } = message
+const assignRole = async(msg, rank) => {
+    await msg.guild.roles.fetch()
+    const promises=[];
+    for(let r in roles) {
+        let role = msg.guild.roles.cache.find(role => role.name === r);
+        if(r === rank) promises.push( msg.member.roles.add(role));
+        else promises.push( msg.member.roles.remove(role));
+    }
+    let role = msg.guild.roles.cache.find(role => role.name === 'authorized');
+    promises.push(msg.member.roles.add(role));
+    await Promise.all(promises);
+    return `Updated to ${rank}`;
+}
 
-//     const role = guild.roles.cache.find((role) => {
-//         return role.name === roleName
-//     })
-//     if (!role) {
-//         message.reply(`There is no role with the name "${roleName}"`)
-//         return
-//     }
-
-//     const member = guild.members.cache.get(targetUser.id)
-//     member.roles.add(role)
-
-//     message.reply(`that user now has the "${roleName}" role`)
-// }
-
-// const assignRole = async(msg) => {
-//     /**
-//      * @param {Message} msg
-//      */
-//     const handle = async (msg) => {
-//         const member = await msg.guild.member(msg.author);
-//         console.log(member);
-//         return member ? member.nickname : msg.author.username;
-//     }
-//     // console.log(handle);
-//     try {
-//         const resp = await axios.get(`https://codeforces.com/api/user.info?handles=${handle}`);
-//         const userInfo = await resp.data.result[0];
-//         const rank = userInfo.rank;
-//         const targetUser = msg.author;
-//         // console.log(targetUser);
-//         await assign(msg, rank);
-//         return "Role assigned";
-//     } catch(e) {
-//         console.log(msg.author)
-//         return `No User Found @${msg.author.username}. Update your server name with codeforces Handle`;
-//     }
-// }
-
-// module.exports = {assignRole};
+module.exports = {assignRole};

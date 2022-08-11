@@ -17,14 +17,13 @@ const getString = function(command, value) {
 const getHelpMessage = async() => {
     // getString("help", "Get all the commands");
     const res =
-    `  
-    $help                     get List of all available commands
-    $handle set xyz           set your codeforces handle to xyz
-    $handle get xyz           get information about handle xyz
-    $contest upcoming         list of upcoming codeforces contests
-    $contest x                get standings of discord user in contest x
-    $random x                 get a random problem rated x
-    `
+`$help                List of all commands
+$handle set xyz      set codeforces handle
+$handle xyz          get information about xyz
+$contest upcoming    upcoming contests
+$contest x           standings of contest x
+$random x            random problem 'x' rated
+`
     return res;
 }
 
