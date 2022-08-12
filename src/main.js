@@ -23,7 +23,11 @@ client.once('ready', () => {
 
 client.on('messageCreate', async(msg) => {
     if(!msg.author.bot && msg.content.startsWith(PREFIX)) {
-        await getResult(msg);
+        try {
+            await getResult(msg);
+        } catch(e) {
+            msg.reply("Server Error");
+        }
     }
 });
 
