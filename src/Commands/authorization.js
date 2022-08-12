@@ -49,7 +49,7 @@ const getAuthorizedUsers = async() => {
  * @param {Message} msg 
  */
 const authorizeMe = async(msg, discordHandle, codeforcesHandle) => {
-    // const time = parseInt(process.env.PROBLEM_SUBMISSION_TIME);
+    const TIME_DURATION = parseInt(process.env.PROBLEM_SUBMISSION_TIME);
     const problem = `https://codeforces.com/problemset/problem/${process.env.PROBLEM_CONTEST_ID}/${process.env.PROBLEM_CONTEST_IDX}`
     const embed = new EmbedBuilder()
         .setTitle('Authorization!!')
@@ -58,40 +58,40 @@ const authorizeMe = async(msg, discordHandle, codeforcesHandle) => {
         .setThumbnail('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Codeforces_logo.svg/2560px-Codeforces_logo.svg.png')
         .setFooter({ text: 'DaaS Codeforces Bot' });
     const timestamp = Math.floor((new Date())/1000);
+    msg.reply({ embeds: [embed] });
     return new Promise((resolve, reject) => {
-        setTimeout(async(resolve, reject) => {
-        try {
-            const resp = await axios.get(`https://codeforces.com/api/user.status?handle=${codeforcesHandle}&from=1&count=1`);
-            const sbmn = await resp.data.result;
-            if(sbmn === null || sbmn.length == 0) {
-                msg.reply("Authentication Failed");
-            } else if(
-                !(timestamp <= sbmn[0].creationTimeSeconds && timestamp + 30 >= sbmn[0].creationTimeSeconds)
-                || sbmn[0].problem.contestId != process.env.PROBLEM_CONTEST_ID
-                || sbmn[0].problem.index != process.env.PROBLEM_CONTEST_IDX
-                || sbmn[0].verdict != process.env.PROBLEM_CONTEST_VERDICT)  {
+        setTimeout(async() => {
+            try {
+                const resp = await axios.get(`https://codeforces.com/api/user.status?handle=${codeforcesHandle}&from=1&count=1`);
+                const sbmn = await resp.data.result;
+                if(sbmn === null || sbmn.length == 0) {
                     msg.reply("Authentication Failed");
-                } else {
-                    try {
-                        const resp = await axios.get(`https://codeforces.com/api/user.info?handles=${codeforcesHandle}`);
-                        const user = await resp.data.result[0];
-                        const userDetails = {
-                            handle: user.handle,
-                            rating: user.rating||0,
-                            rank: user.rank||"unparticipated"
+                } else if(
+                    !(timestamp <= sbmn[0].creationTimeSeconds && timestamp + TIME_DURATION >= sbmn[0].creationTimeSeconds)
+                    || sbmn[0].problem.contestId != process.env.PROBLEM_CONTEST_ID
+                    || sbmn[0].problem.index != process.env.PROBLEM_CONTEST_IDX
+                    || sbmn[0].verdict != process.env.PROBLEM_CONTEST_VERDICT)  {
+                        msg.reply("Authentication Failed");
+                    } else {
+                        try {
+                            const resp = await axios.get(`https://codeforces.com/api/user.info?handles=${codeforcesHandle}`);
+                            const user = await resp.data.result[0];
+                            const userDetails = {
+                                handle: user.handle,
+                                rating: user.rating||0,
+                                rank: user.rank||"unparticipated"
+                            }
+                            const res = await setUserHandle(msg, discordHandle, userDetails);
+                            resolve(res);
+                        } catch (e) {
+                            resolve(`No User Exist ${codeforcesHandle}`);
                         }
-                        const res = await setUserHandle(msg, discordHandle, userDetails);
-                        return res;
-                    } catch (e) {
-                        return `No User Exist ${codeforcesHandle}`
                     }
+                } catch (e) {
+                    resolve(`No User Exist ${codeforcesHandle}`);
                 }
-            } catch (e) {
-                return `No User Exist ${codeforcesHandle}`
-            }
-        }, 15000);
-        resolve({ embeds: [embed] })
-    });
+            }, TIME_DURATION);
+        });
 }
 
 module.exports = {setUserHandle, authorizeMe, amIAuthorized, getAuthorizedUsers, getCodeforcesHandle};
