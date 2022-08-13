@@ -2,7 +2,7 @@ module.exports = {
   "type": "service_account",
   "project_id": "daas-cp-integration",
   "private_key_id": `${process.env.private_key_id}`,
-  "private_key": `${process.env.private_key}`,
+  "private_key": `${process.env.private_key.replace(/\\n/gm, '\n')}`,
   "client_email": "daas-cp-integration@appspot.gserviceaccount.com",
   "client_id": `${process.env.client_id}`,
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
